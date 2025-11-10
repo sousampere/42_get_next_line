@@ -63,10 +63,10 @@ int main()
 {
 	int fd;
 	fd = open("file.txt", O_RDONLY);
-	// printf("----- Ode a Laurent -----\n");
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
+	printf("----- Ode a Laurent -----\n");
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
 	// printf(get_next_line(fd);
 	// get_next_line(fd);
 	// get_next_line(fd);
@@ -98,6 +98,8 @@ int main()
 	// printf("%s", get_next_line(fd2));
 	// get_next_line(fd2);
 	printf("----- Ode a Laurent -----\n");
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
 	// printf("%s", get_next_line(fd));
