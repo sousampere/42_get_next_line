@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gnl.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gtourdia <@student.42mulhouse.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/11 18:34:04 by gtourdia          #+#    #+#             */
+/*   Updated: 2025/11/11 20:41:56 by gtourdia         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -5,11 +16,10 @@
 #include <unistd.h>
 #include "gnl.h"
 
-
-void	*ft_calloc(char nmemb, char size)
+void	*ft_calloc(char nmemb, int size)
 {
 	void	*alloc;
-	size_t	i;
+	int		i;
 
 	if (size != 0 && (nmemb * size) / size != nmemb)
 		return (NULL);
@@ -35,101 +45,72 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*string;
-	size_t	i;
-	size_t	stringlen;
-
-	i = 0;
-	if (s1 == NULL || s2 == NULL)
-		return (NULL);
-	string = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!string)
-		return (NULL);
-	while (s1[i])
-	{
-		string[i] = s1[i];
-		i++;
-	}
-	string[i] = '\0';
-	i = 0;
-	while (s2[i])
-	{
-		stringlen = ft_strlen(string);
-		string[stringlen] = s2[i];
-		string[stringlen + 1] = '\0';
-		i++;
-	}
-	return (string);
-}
-
-// Cette fonction renvoie l'adresse d'une struct de fichier qui lui correspond
-// (ou lui en cree une puis renvoie cette struct)
-s_file	*add_file_to_list(int fd, s_file *files)
-{
-	s_file	new_file;
-
-	while (files->next != NULL)
-	{
-		if (files->fd == fd)
-			return (files);
-		files = files->next;
-	}
-	new_file.fd = fd;
-	new_file.last_read = NULL;
-	new_file.next = NULL;
-	files->next = &new_file;
-	return (&new_file);
-}
-
-char	*resume_previous_reading(char	*prev_read)
+int	newline_in_string(char *str)
 {
 	int	i;
 
-	i = 0;
-	while (prev_read[i] != '\n' || prev_read[i])
-		i++;
-	if (prev_read[i])
-		return (&prev_read[i + 1]);
-	else
-		return (&prev_read[i]);
+	i = -1;
+	while (str[++i])
+		if (str[i] == '\n')
+			return (1);
+	return (0);
 }
 
-// Etapes :
-// Check si le fichier a deja ete lu
-// - S'il ne l'est pas
-//		- l'ajouter a la liste
-//		- lire tant qu'on n'a pas atteint la fin de la liste
-//		- a chaque lecture, enregsitrer la lecture dans la struct
-// - S'il l'est deja, recuperer
-//		- reprendre la precedente lecture en ignorant le premier \n
+s_file	*save_restore_file(int fd, s_file **files)
+{
+	s_file	*new_file;
 
+	new_file = malloc(sizeof(s_file) * 1);
+	if ((*files) == NULL) // Si files est vide, j'y ajoute mon fichier
+		(*files) = new_file;
+	else
+	{
+		while ((*files) != NULL)
+		{
+			if ((*files)->fd == fd)
+				return (*files);
+			(*files) = (*files)->next;
+		}
+	}
+	(*files)->fd = fd;
+	(*files)->last_read = ft_calloc(BUFFER_SIZE + 1, 1);
+	(*files)->next = NULL;
+	return ((*files));
+}
 
+char	*concat(char **str1, char *str2)
+{
+	
+}
 
 char	*get_next_line(int fd)
 {
-	static s_file	files;
-	s_file			*current_file;
+	static s_file	*file_list;
+	s_file			*file;
 	char			*line;
-	char			*read_result;
+	int				i;
 
-	// Recupere la struct correspondant au fichier
-	current_file = add_file_to_list(fd, &files);
-	if (current_file->last_read != NULL)
+	file = save_restore_file(fd, &file_list); // Recup previous data
+	if (newline_in_string(file->last_read))
 	{
-		// Si il y avait une lecture interrompue avant, la reprendre
-		line = resume_previous_reading(current_file->last_read);
-		current_file->last_read = NULL;
+		line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		i = -1;
+		while (line[++i] != '\n')
+			line[i] = file->last_read[i];
+		file->last_read[i] += i + 1;
 	}
-	read_result = ft_calloc(sizeof(char), BUFFER_SIZE + ft_strlen(line) + 1);
-	read(fd, read_result, BUFFER_SIZE);
+	return (file->last_read);
 }
 
 int main()
 {
-	// printf("%s\n", "salut");
-	int fd = open("get_next_line_utils.c", O_RDONLY);
-	printf("%s\n", get_next_line(fd));
+	int fd = open("get_next_line.h", O_RDONLY);
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	int fd2 = open("main.c", O_RDONLY);
+	// printf("%s\n", get_next_line(fd));
+	// s_file	*file = save_restore_file(fd, )
 	close(fd);
+	close(fd2);
 }

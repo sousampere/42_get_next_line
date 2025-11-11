@@ -6,12 +6,12 @@
 /*   By: gtourdia <@student.42mulhouse.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 12:33:26 by gtourdia          #+#    #+#             */
-/*   Updated: 2025/11/10 15:32:41 by gtourdia         ###   ########.fr       */
+/*   Updated: 2025/11/11 19:52:16 by gtourdia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 10
+# define BUFFER_SIZE 20
 #endif
 
 #ifndef GET_NEXT_LINE_H
