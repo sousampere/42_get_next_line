@@ -6,7 +6,7 @@
 /*   By: gtourdia <@student.42mulhouse.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 18:34:04 by gtourdia          #+#    #+#             */
-/*   Updated: 2025/11/11 20:41:56 by gtourdia         ###   ########.fr       */
+/*   Updated: 2025/11/12 11:59:15 by gtourdia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,59 +56,149 @@ int	newline_in_string(char *str)
 	return (0);
 }
 
-s_file	*save_restore_file(int fd, s_file **files)
+s_file *saved_file_data(int fd, s_file **files)
 {
 	s_file	*new_file;
 
-	new_file = malloc(sizeof(s_file) * 1);
-	if ((*files) == NULL) // Si files est vide, j'y ajoute mon fichier
-		(*files) = new_file;
-	else
+	// Aucun fichier enregistre
+	while ((*files) != NULL)
 	{
-		while ((*files) != NULL)
-		{
-			if ((*files)->fd == fd)
-				return (*files);
-			(*files) = (*files)->next;
-		}
+		if ((*files)->fd == fd)
+			return (*files);
+		(*files) = (*files)->next;
 	}
-	(*files)->fd = fd;
-	(*files)->last_read = ft_calloc(BUFFER_SIZE + 1, 1);
-	(*files)->next = NULL;
-	return ((*files));
+	new_file = malloc(sizeof(s_file) * 1);
+	new_file->fd = fd;
+	new_file->last_read = ft_calloc(BUFFER_SIZE + 1, sizeof(s_file));
+	new_file->next = NULL;
+	(*files) = new_file;
+	return (*files);
 }
 
-char	*concat(char **str1, char *str2)
+char	*get_lastread_string(s_file	*f_data)
 {
+	int		i;
+	char	*line;
 	
+	i = -1;
+	line = ft_calloc(ft_strlen(f_data->last_read) + 1, sizeof(char));
+	while (f_data->last_read[++i] && f_data->last_read[i] != '\n')
+		line[i] = f_data->last_read[i];
+	if (f_data->last_read[i] == '\n')
+	{
+		f_data->last_read = &f_data->last_read[i + 1];
+		line[i] = '\n';
+	}
+	else
+	{
+		f_data->last_read = &f_data->last_read[i];
+	}
+	return (line);
+}
+
+char	*concat(s_file	*f_data, char *read)
+{
+	int		i;
+	int		ii;
+	char	*line;
+
+	i = -1;
+	ii = ft_strlen(f_data->last_read);
+	line = ft_calloc(ii + ft_strlen(read) + 1, sizeof(char));
+	while (f_data->last_read[++i])
+		line[i] = f_data->last_read[i];
+	ii = -1;
+	while (read[ii] && read[ii] != '\n')
+		line[i + ii] = read[ii];
+	if (read[ii] == '\n')
+	{
+		f_data->last_read = &read[i + 1];
+		line[i + ii] = '\n';
+	}
+	return (line);
+}
+
+char	*concat_line(char *prev_line, char *read, s_file *f_data)
+{
+	int		i;
+	int		ii;
+	char	*line;
+
+	i = -1;
+	ii = ft_strlen(prev_line);
+	line = ft_calloc(ii + ft_strlen(read) + 1, sizeof(char));
+	while (prev_line[++i])
+		line[i] = prev_line[i];
+	ii = -1;
+	while (read[++ii] && read[ii] != '\n')
+		line[i + ii] = read[ii];
+	if (read[ii] == '\n')
+	{
+		f_data->last_read = &read[ii + 1];
+		line[i + ii] = '\n';
+	}
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static s_file	*file_list;
-	s_file			*file;
+	static s_file	*files;
+	s_file			*f_data;
+	char			*read_data;
 	char			*line;
-	int				i;
+	int				read_val;
 
-	file = save_restore_file(fd, &file_list); // Recup previous data
-	if (newline_in_string(file->last_read))
+	f_data = saved_file_data(fd, &files);
+	if (newline_in_string(f_data->last_read))
+		return (get_lastread_string(f_data));
+	else
 	{
-		line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-		i = -1;
-		while (line[++i] != '\n')
-			line[i] = file->last_read[i];
-		file->last_read[i] += i + 1;
+		read_data = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		line = ft_calloc(1, 1);
+		line = concat(f_data, line);
+		read_val = 1;
+		while (!newline_in_string(line) && read_val != 0)
+		{
+			read_val = read(fd, read_data, BUFFER_SIZE);
+			line = concat_line(line, read_data, f_data);
+		}
 	}
-	return (file->last_read);
+	if (read_val == 0 && ft_strlen(line) == 0)
+		return (NULL);
+	return (line);
 }
 
 int main()
 {
-	int fd = open("get_next_line.h", O_RDONLY);
+	int fd = open("tests.c", O_RDONLY);
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
 	int fd2 = open("main.c", O_RDONLY);
+	// printf("%s", get_next_line(fd2));
+	// printf("%s", get_next_line(fd2));
+	// printf("%s", get_next_line(fd2));
+	// printf("%s", get_next_line(fd2));
+	// printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
 	// printf("%s\n", get_next_line(fd));
 	// s_file	*file = save_restore_file(fd, )
 	close(fd);
