@@ -6,7 +6,7 @@
 /*   By: gtourdia <@student.42mulhouse.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 18:34:04 by gtourdia          #+#    #+#             */
-/*   Updated: 2025/11/12 11:59:15 by gtourdia         ###   ########.fr       */
+/*   Updated: 2025/11/12 14:10:11 by gtourdia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include "gnl.h"
 
-void	*ft_calloc(char nmemb, int size)
+void	*ft_calloc(int nmemb, int size)
 {
 	void	*alloc;
 	int		i;
@@ -137,6 +137,8 @@ char	*concat_line(char *prev_line, char *read, s_file *f_data)
 		f_data->last_read = &read[ii + 1];
 		line[i + ii] = '\n';
 	}
+	else
+		f_data->last_read = &read[ii];
 	return (line);
 }
 
@@ -174,7 +176,7 @@ int main()
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
-	int fd2 = open("main.c", O_RDONLY);
+	int fd2 = open("gnl.h", O_RDONLY);
 	// printf("%s", get_next_line(fd2));
 	// printf("%s", get_next_line(fd2));
 	// printf("%s", get_next_line(fd2));
@@ -199,6 +201,41 @@ int main()
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
 	// printf("%s\n", get_next_line(fd));
 	// s_file	*file = save_restore_file(fd, )
 	close(fd);

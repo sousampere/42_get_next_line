@@ -6,35 +6,38 @@
 /*   By: gtourdia <@student.42mulhouse.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 12:56:55 by gtourdia          #+#    #+#             */
-/*   Updated: 2025/11/10 14:50:55 by gtourdia         ###   ########.fr       */
+/*   Updated: 2025/11/12 14:13:12 by gtourdia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 
 char	*get_next_line(int fd)
 {
-	// static s_file	files;
-	char			*read_result;
-	int				file_status;
+	static s_file	*files;
+	s_file			*f_data;
+	char			*read_data;
 	char			*line;
+	int				read_val;
 
-	// printf("File descriptor : %d -> %d\n", fd, is_open(fd, &files));
-	// if (!is_open(fd, &files))
-	// 	files = get_new_filestruct(fd);
-	line = ft_calloc(sizeof(char), 1);
-	read_result = ft_calloc(sizeof(char), BUFFER_SIZE + 1);
-	file_status = 1;
-	while (file_status)
+	f_data = saved_file_data(fd, &files);
+	if (newline_in_string(f_data->last_read))
+		return (get_lastread_string(f_data));
+	else
 	{
-		file_status = read(fd, read_result, BUFFER_SIZE);
-		if (file_status != 0 && !is_terminated(line))
+		read_data = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		line = ft_calloc(1, 1);
+		line = concat(f_data, line);
+		read_val = 1;
+		while (!newline_in_string(line) && read_val != 0)
 		{
-			line = ft_strjoin(line, read_result);
+			read_val = read(fd, read_data, BUFFER_SIZE);
+			line = concat_line(line, read_data, f_data);
 		}
 	}
+	if (read_val == 0 && ft_strlen(line) == 0)
+		return (NULL);
 	return (line);
 }

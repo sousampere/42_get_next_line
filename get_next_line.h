@@ -6,7 +6,7 @@
 /*   By: gtourdia <@student.42mulhouse.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 12:33:26 by gtourdia          #+#    #+#             */
-/*   Updated: 2025/11/11 19:52:16 by gtourdia         ###   ########.fr       */
+/*   Updated: 2025/11/12 14:20:44 by gtourdia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+#include <stdlib.h>
+
 typedef struct s_file
 {
 	int				fd;
@@ -24,12 +26,14 @@ typedef struct s_file
 	struct s_file	*next;
 } s_file;
 
-// int		is_open(int fd, s_file *files);
-// s_file	get_new_filestruct(int fd);
-// char	*get_next_line(int fd);
-// char	*add_char_string(char c, char *str);
-// char	*ft_strjoin(char const *s1, char const *s2);
-// void	*ft_calloc(char nmemb, char size);
-// int	is_terminated(char *str);
+char	*concat_line(char *prev_line, char *read, s_file *f_data);
+char	*get_lastread_string(s_file	*f_data);
+s_file 	*saved_file_data(int fd, s_file **files);
+int		newline_in_string(char *str);
+size_t	ft_strlen(const char *s);
+void	*ft_calloc(int nmemb, int size);
+char	*concat(s_file	*f_data, char *read);
+
+char	*get_next_line(int fd);
 
 #endif
