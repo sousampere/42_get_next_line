@@ -6,42 +6,13 @@
 /*   By: gtourdia <@student.42mulhouse.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 12:57:59 by gtourdia          #+#    #+#             */
-/*   Updated: 2025/11/12 14:20:29 by gtourdia         ###   ########.fr       */
+/*   Updated: 2025/11/13 15:20:42 by gtourdia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <unistd.h>
 #include <stdlib.h>
-
-void	*ft_calloc(int nmemb, int size)
-{
-	void	*alloc;
-	int		i;
-
-	if (size != 0 && (nmemb * size) / size != nmemb)
-		return (NULL);
-	alloc = malloc(nmemb * size);
-	if (!alloc)
-		return (NULL);
-	i = 0;
-	while (i < size)
-	{
-		((char *) alloc)[i] = '\0';
-		i++;
-	}
-	return (alloc);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
 
 int	newline_in_string(char *str)
 {
@@ -58,7 +29,6 @@ s_file *saved_file_data(int fd, s_file **files)
 {
 	s_file	*new_file;
 
-	// Aucun fichier enregistre
 	while ((*files) != NULL)
 	{
 		if ((*files)->fd == fd)
@@ -69,6 +39,7 @@ s_file *saved_file_data(int fd, s_file **files)
 	new_file->fd = fd;
 	new_file->last_read = ft_calloc(BUFFER_SIZE + 1, sizeof(s_file));
 	new_file->next = NULL;
+	new_file->read_complete = 0;
 	(*files) = new_file;
 	return (*files);
 }
@@ -116,7 +87,7 @@ char	*concat(s_file	*f_data, char *read)
 	return (line);
 }
 
-char	*concat_line(char *prev_line, char *read, s_file *f_data)
+char	*concat_line(char *prev_line, char *read, s_file *f_data, int r_status)
 {
 	int		i;
 	int		ii;
@@ -125,6 +96,8 @@ char	*concat_line(char *prev_line, char *read, s_file *f_data)
 	i = -1;
 	ii = ft_strlen(prev_line);
 	line = ft_calloc(ii + ft_strlen(read) + 1, sizeof(char));
+	if (!newline_in_string(read) && r_status == 0)
+		f_data->read_complete = 1;
 	while (prev_line[++i])
 		line[i] = prev_line[i];
 	ii = -1;
