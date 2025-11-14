@@ -6,7 +6,7 @@
 /*   By: gtourdia <@student.42mulhouse.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 12:57:59 by gtourdia          #+#    #+#             */
-/*   Updated: 2025/11/14 09:38:35 by gtourdia         ###   ########.fr       */
+/*   Updated: 2025/11/14 10:14:02 by gtourdia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ char	*concat(t_file	*f_data, char *read)
 		f_data->last_read = &read[i + 1];
 		line[i + ii] = '\n';
 	}
+	free(read);
+	read = NULL;
 	return (line);
 }
 
@@ -123,6 +125,8 @@ char	*concat_line(char *prev_line, char *read, t_file *f_data, int r_status)
 		f_data->read_complete = 1;
 	while (prev_line[++i])
 		line[i] = prev_line[i];
+	free(prev_line);
+	prev_line = NULL;
 	ii = -1;
 	while (read[++ii] && read[ii] != '\n')
 		line[i + ii] = read[ii];
