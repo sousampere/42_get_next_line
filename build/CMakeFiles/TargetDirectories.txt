@@ -1,3 +1,0 @@
-/home/gtourdia/Documents/get_next_line-github/build/CMakeFiles/get_next_line.c.dir
-/home/gtourdia/Documents/get_next_line-github/build/CMakeFiles/edit_cache.dir
-/home/gtourdia/Documents/get_next_line-github/build/CMakeFiles/rebuild_cache.dir
