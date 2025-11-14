@@ -10,7 +10,7 @@ int main()
 	int fd;
 	fd = open("file.txt", O_RDONLY);
 	printf("%s", get_next_line(fd));
-	int fd2 = open("main.c", O_RDONLY);
+	int fd2 = open("CMakeLists.txt", O_RDONLY);
 	printf("%s", get_next_line(fd2));
 	printf("%s", get_next_line(fd2));
 	printf("%s", get_next_line(fd2));
@@ -20,6 +20,20 @@ int main()
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
 	close(fd);
 	close(fd2);
 }

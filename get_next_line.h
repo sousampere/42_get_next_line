@@ -6,7 +6,7 @@
 /*   By: gtourdia <@student.42mulhouse.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 12:33:26 by gtourdia          #+#    #+#             */
-/*   Updated: 2025/11/13 13:17:38 by gtourdia         ###   ########.fr       */
+/*   Updated: 2025/11/14 08:54:04 by gtourdia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_file
 
 char	*concat_line(char *prev_line, char *read, s_file *f_data, int r_status);
 char	*get_lastread_string(s_file	*f_data);
-s_file 	*saved_file_data(int fd, s_file **files);
+s_file	*get_file_data(int fd, s_file **files);
 int		newline_in_string(char *str);
 size_t	ft_strlen(const char *s);
 void	*ft_calloc(int nmemb, int size);

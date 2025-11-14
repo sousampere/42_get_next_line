@@ -1,0 +1,3 @@
+Salut, ceci
+est la deuxieme ligne
+avant la fin du fichier.

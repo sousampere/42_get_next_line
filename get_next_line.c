@@ -6,7 +6,7 @@
 /*   By: gtourdia <@student.42mulhouse.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 12:56:55 by gtourdia          #+#    #+#             */
-/*   Updated: 2025/11/13 15:01:30 by gtourdia         ###   ########.fr       */
+/*   Updated: 2025/11/14 08:53:56 by gtourdia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	*get_next_line(int fd)
 	char			*line;
 	int				read_val;
 
-	f_data = saved_file_data(fd, &files);
+	f_data = get_file_data(fd, &files);
 	if (newline_in_string(f_data->last_read))
 		return (get_lastread_string(f_data));
 	else
@@ -68,7 +68,6 @@ char	*get_next_line(int fd)
 			read_val = read(fd, read_data, BUFFER_SIZE);
 			line = concat_line(line, read_data, f_data, read_val);
 		}
-		// f_data->last_read = "ZZ";
 	}
 	return (line);
 }

@@ -1,18 +1,59 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   gnl2.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gtourdia <@student.42mulhouse.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/09 12:57:59 by gtourdia          #+#    #+#             */
-/*   Updated: 2025/11/14 08:52:43 by gtourdia         ###   ########.fr       */
+/*   Created: 2025/11/13 17:52:55 by gtourdia          #+#    #+#             */
+/*   Updated: 2025/11/14 08:50:01 by gtourdia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <fcntl.h>
+
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 3
+#endif
+
+typedef struct s_file
+{
+	int				fd;
+	char			*last_read;
+	struct s_file	*next;
+} s_file;
+
+void	*ft_calloc(int nmemb, int size)
+{
+	void	*alloc;
+	int		i;
+
+	if (size != 0 && (nmemb * size) / size != nmemb)
+		return (NULL);
+	alloc = malloc(nmemb * size);
+	if (!alloc)
+		return (NULL);
+	i = 0;
+	while (i < size)
+	{
+		((char *) alloc)[i] = '\0';
+		i++;
+	}
+	return (alloc);
+}
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
 
 int	newline_in_string(char *str)
 {
@@ -66,69 +107,17 @@ s_file	*get_file_data(int fd, s_file **files)
 	return (new_file);
 }
 
-char	*get_lastread_string(s_file	*f_data)
+char	*get_next_line(int fd)
 {
-	int		i;
-	char	*line;
-	
-	i = -1;
-	line = ft_calloc(ft_strlen(f_data->last_read) + 1, sizeof(char));
-	while (f_data->last_read[++i] && f_data->last_read[i] != '\n')
-		line[i] = f_data->last_read[i];
-	if (f_data->last_read[i] == '\n')
-	{
-		f_data->last_read = &f_data->last_read[i + 1];
-		line[i] = '\n';
-	}
-	else
-	{
-		f_data->last_read = &f_data->last_read[i];
-	}
-	return (line);
+	static s_file	*files;
+	s_file			*f_data;
+	char			*line;
+
+	f_data = get_file_data(fd, &files);
 }
 
-char	*concat(s_file	*f_data, char *read)
+int main()
 {
-	int		i;
-	int		ii;
-	char	*line;
-
-	i = -1;
-	ii = ft_strlen(f_data->last_read);
-	line = ft_calloc(ii + ft_strlen(read) + 1, sizeof(char));
-	while (f_data->last_read[++i])
-		line[i] = f_data->last_read[i];
-	ii = -1;
-	while (read[ii] && read[ii] != '\n')
-		line[i + ii] = read[ii];
-	if (read[ii] == '\n')
-	{
-		f_data->last_read = &read[i + 1];
-		line[i + ii] = '\n';
-	}
-	return (line);
-}
-
-char	*concat_line(char *prev_line, char *read, s_file *f_data, int r_status)
-{
-	int		i;
-	int		ii;
-	char	*line;
-
-	i = -1;
-	ii = ft_strlen(prev_line);
-	line = ft_calloc(ii + ft_strlen(read) + 1, sizeof(char));
-	if (!newline_in_string(read) && r_status == 0)
-		f_data->read_complete = 1;
-	while (prev_line[++i])
-		line[i] = prev_line[i];
-	ii = -1;
-	while (read[++ii] && read[ii] != '\n')
-		line[i + ii] = read[ii];
-	if (read[ii] == '\n')
-	{
-		f_data->last_read = &read[ii + 1];
-		line[i + ii] = '\n';
-	}
-	return (line);
+	int fd = open("file.txt", O_RDONLY);
+	close(fd);
 }
