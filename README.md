@@ -16,7 +16,7 @@ To run it, you first need to clone it.
   git clone https://github.com/sousampere/42_get_next_line
 ```
 
-You can then compile it with your project using :
+You can then compile it with your project using (change the BUFFER_SIZE for the value you want, the default value is 10) :
 
 ```bash
   cc -D BUFFER_SIZE=10 get_next_line.c get_next_line_utils.c (... your files)
